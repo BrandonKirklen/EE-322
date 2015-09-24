@@ -1,5 +1,4 @@
 void setup() {
-  // put your setup code here, to run once:
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
@@ -16,7 +15,6 @@ void trafficLight(int light, int duration){
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   int lightRed = 6;
   int lightYellow = 5;
   int lightGreen = 4;
@@ -32,9 +30,9 @@ void loop() {
   else if ( allGo == HIGH ){
     trafficLight(lightGreen, 5000);
   }
-  else if (allStop != HIGH && allGo != HIGH ){
-    trafficLight(lightRed, 1000);
+  else{
+    trafficLight(lightGreen, 1000);
     trafficLight(lightYellow, 500);
-    trafficLight(lightGreen, 1000); 
+    trafficLight(lightRed, 1000); 
   }
 }
