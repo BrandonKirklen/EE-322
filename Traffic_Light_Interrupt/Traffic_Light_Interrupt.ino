@@ -1,50 +1,52 @@
-// Definition of interrupt names
-#include <avr/io.h>
-// ISR interrupt service routine
-#include <avr/interrupt.h>
+volatile bool redState = false;
+volatile bool greenState = false;
 
+void setup() {
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
 
-// LED connected to digital pin 13
-int ledPin = 13;
-// This is the INT0 Pin of the ATMega8
-int sensePin = 2;
-// We need to declare the data exchange
-// variable to be volatile - the value is
-// read from memory.
-volatile int value = 0;
-
-// Install the interrupt routine.
-ISR(INT0_vect) {
-  // check the value again - since it takes some time to
-  // activate the interrupt routine, we get a clear signal.
-  value = digitalRead(sensePin);
+  attachInterrupt(digitalPinToInterrupt(2), toggleRed, RISING);
+  attachInterrupt(digitalPinToInterrupt(3), toggleGreen, RISING);
 }
 
+void toggleRed() {
+  redState = !redState;
+}
 
-void setup(){
-  Serial.begin(9600);
-  Serial.println("Initializing ihandler");
-  // sets the digital pin as output
-  pinMode(ledPin, OUTPUT);
-  // read from the sense pin
-  pinMode(sensePin, INPUT);
-  Serial.println("Processing initialization");
-  // Global Enable INT0 interrupt
-  GICR |= ( 1 < < INT0);
-  // Signal change triggers interrupt
-  MCUCR |= ( 1 << ISC00);
-  MCUCR |= ( 0 << ISC01);
-  Serial.println("Finished initialization");
+void toggleGreen() {
+  greenState = !greenState;
+}
+
+void trafficLightReset(int lights[]){
+  for (int x = 0; x <= 3; x++){
+    digitalWrite( lights[x], LOW );
+  }
+}
+
+void trafficLight(int lights[], int light, int duration){
+  trafficLightReset(lights);
+  digitalWrite(light, HIGH);
+  delay(duration);
 }
 
 void loop() {
-  if (value) {
-    Serial.println("Value high!");
-    digitalWrite(ledPin, HIGH);
-  } else {
-    Serial.println("Value low!");
-    digitalWrite(ledPin, LOW);
-  }
-  delay(100);
-}
+  int lightRed = 6;
+  int lightYellow = 5;
+  int lightGreen = 4;
+  int lights[3] = {4,5,6};
 
+  if (redState){
+    trafficLight(lights, lightRed, 1000);
+  }
+  else if(greenState){
+    trafficLight(lights, lightGreen, 1000);
+  }
+  else{
+    trafficLight(lights, lightGreen, 2000);
+    trafficLight(lights, lightYellow, 500);
+    trafficLight(lights, lightRed, 2000); 
+  }
+}
