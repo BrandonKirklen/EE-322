@@ -45,16 +45,16 @@ void loop() {
   int lightYellow = 5;
   int lightGreen = 4;
   struct LightDef lights;
-  lights.lightPins[0] = 4;
-  lights.lightPins[1] = 5;
-  lights.lightPins[2] = 6;
+  lights.lightPins[0] = lightRed;
+  lights.lightPins[1] = lightYellow;
+  lights.lightPins[2] = lightGreen;
   lights.numberOfLights = 3;
  
   if (redState){
-    trafficLight(lights, lightRed, 1000);
+    trafficLight(lights, lightRed, 100);
   }
   else if(greenState){
-    trafficLight(lights, lightGreen, 1000);
+    trafficLight(lights, lightGreen, 100);
   }
   else{
     trafficLight(lights, lightGreen, 2000);
