@@ -6,10 +6,14 @@ void setup() {
   pinMode(3, INPUT);
 }
 
-void trafficLight(int light, int duration){
-  digitalWrite(4, LOW);
-  digitalWrite(5, LOW);
-  digitalWrite(6, LOW);
+void trafficLightReset(int lights[]){
+  for (int x = 0; x <= 3 ; x++){
+    digitalWrite( lights[x], LOW );
+  }
+}
+
+void trafficLight(int lights[], int light, int duration){
+  trafficLightReset(lights);
   digitalWrite(light, HIGH);
   delay(duration);
 }
@@ -18,21 +22,22 @@ void loop() {
   int lightRed = 6;
   int lightYellow = 5;
   int lightGreen = 4;
+  int lights[3] = {4,5,6};
   int allStop = digitalRead(2);
   int allGo = digitalRead(3);
 
   if ( allStop == HIGH && allGo == HIGH ){
-    trafficLight(lightYellow, 5000);
+    trafficLight(lights, lightYellow, 5000);
   }
   else if ( allStop == HIGH ){
-    trafficLight(lightRed, 5000);
+    trafficLight(lights, lightRed, 5000);
   }
   else if ( allGo == HIGH ){
-    trafficLight(lightGreen, 5000);
+    trafficLight(lights, lightGreen, 5000);
   }
   else{
-    trafficLight(lightGreen, 1000);
-    trafficLight(lightYellow, 500);
-    trafficLight(lightRed, 1000); 
+    trafficLight(lights, lightGreen, 1000);
+    trafficLight(lights, lightYellow, 500);
+    trafficLight(lights, lightRed, 1000); 
   }
 }
